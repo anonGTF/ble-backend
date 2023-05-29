@@ -15,20 +15,27 @@ module.exports = {
 	// Auth\
 
 	// Private:
-	getFullName: _getFullName
+	getFullName: _getFullName,
 
 	// Add your methods here...
-
+	verifyUser: _verifyUser,
+	updateUser: _updateUser,
+	getUsers: _getUsers,
+	getUser: _getUser
 	// Private\
 }
 
 // Auth:
-async function _register({ email, password }) {
+async function _register({ email, password, name, nip, role, isVerified }) {
 	try{
 		// Try to create new user.
 		const user = await User.create({
 			email,
-			password
+			password,
+			name,
+			nip,
+			role,
+			is_verified: isVerified
 		});
 
 		// Issue new access and refresh JWT.
@@ -108,3 +115,93 @@ async function _getFullName({ userId }) {
 	}
 }
 // Private\
+
+async function _verifyUser({ userId }) {
+	try{
+		// Try to find user.
+		const user = await User.findById(userId);
+
+		if (!user) {
+			// If no such user was found, throw error with name UserNotFound:
+			const err = new Err('User not found');
+			err.name = "UserNotFound";
+			throw err;
+		} else if (user.is_verified == true) {
+			const err = new Err('User already verified');
+			err.name = "ValidationError";
+			throw err;
+		}
+
+		const updatedUser = await user.update({
+			is_verified: true
+		})
+
+		const message = "Berhasil verifikasi User"
+
+		// Send output.
+		return Promise.resolve([ message, updatedUser ]);
+	}
+	catch(error){
+		return Promise.reject(error);
+	}
+}
+
+async function _updateUser({ userId, name, role, nip }) {
+	try{
+		// Try to find user.
+		const user = await User.findById(userId);
+
+		if (!user) {
+			// If no such user was found, throw error with name UserNotFound:
+			const err = new Err('User not found');
+			err.name = "UserNotFound";
+			throw err;
+		}
+
+		const updateduser = await user.update({
+			name,
+			role,
+			nip
+		})
+
+		const message = "Berhasil update User"
+
+		// Send output.
+		return Promise.resolve([ message, updateduser ]);
+	}
+	catch(error){
+		return Promise.reject(error);
+	}
+}
+
+async function _getUsers() {
+  try{
+		const users = await User.findAll({
+			where: {
+				is_verified: false
+			}
+		})
+		return Promise.resolve([ users ]);
+	}
+	catch(error){
+		return Promise.reject(error);
+	}
+}
+
+async function _getUser({ userId }) {
+  try{
+		const user = await User.findById(userId);
+
+		if (!user) {
+			// If no such user was found, throw error with name UserNotFound:
+			const err = new Err('User not found');
+			err.name = "UserNotFound";
+			throw err;
+		}
+
+		return Promise.resolve([ user ]);
+	}
+	catch(error){
+		return Promise.reject(error);
+	}
+}

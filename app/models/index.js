@@ -3,4 +3,6 @@
  */
 require('./User');
 require('./DisabledRefreshToken');
+require('./BleDevice');
+require('./Log');
 // Add your models here ...

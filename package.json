@@ -20,7 +20,10 @@
 		"express-routes-mapper": "^1.0.2",
 		"helmet": "^3.22.0",
 		"jsonwebtoken": "^9.0.0",
+		"moment": "^2.29.4",
 		"mysql2": "^2.1.0",
+		"pg": "^8.11.0",
+		"pg-hstore": "^2.3.4",
 		"pug": "^3.0.1",
 		"sequelize": "^5.21.5"
 	},

@@ -62,15 +62,17 @@ function UsersController() {
 			// Extract request input:
 			const email = req.body?.email
 			const password = req.body?.password
-			const firstName = req.body?.firstName
-			const lastName = req.body?.lastName
+			const name = req.body?.name
+			const nip = req.body?.nip
 
 			// Create new one.
 			const [ tokens, user ] = await usersFacade.register({
 				email,
 				password,
-				firstName,
-				lastName
+				name,
+				nip,
+				role: "USER",
+				isVerified: false
 			});
 
 			// Everything's fine, send response.
@@ -237,6 +239,86 @@ function UsersController() {
 		}
 	}
 
+	const _verifyUser = async (req, res) => {
+		try {
+			// Unwrap user's id.
+			const userId = req.body?.id;
+
+			// Try to get full name.
+			const [ message ] = await usersFacade.verifyUser({ userId });
+
+			return createOKResponse({
+				res, 
+				content:{
+					message
+				}
+			});
+		}
+		catch(error) {
+			console.error("UsersController._verifyUser error: ", error);
+			return _processError(error, req, res);
+		}
+	}
+
+	const _updateUser = async (req, res) => {
+		try {
+			// Unwrap user's id.
+			const userId = req.body?.id;
+			const name = req.body?.name
+			const role = req.body?.role
+			const nip = req.body?.nip
+
+			// Try to get full name.
+			const [ message ] = await usersFacade.updateUser({ userId, name, role, nip });
+
+			return createOKResponse({
+				res, 
+				content:{
+					message
+				}
+			});
+		}
+		catch(error) {
+			console.error("UsersController._updateUser error: ", error);
+			return _processError(error, req, res);
+		}
+	}
+
+	const _getUsers = async (req, res) => {
+    try {
+			const [ users ] = await usersFacade.getUsers();
+
+			return createOKResponse({
+				res, 
+				content:{
+					users
+				}
+			});
+		}
+		catch(error) {
+			console.error("UsersController._getUsers error: ", error);
+			return _processError(error, req, res);
+		}
+  }
+
+	const _getUser = async (req, res) => {
+    try {
+			const userId = req.query.id
+			const [ user ] = await usersFacade.getUser({ userId });
+
+			return createOKResponse({
+				res, 
+				content:{
+					user
+				}
+			});
+		}
+		catch(error) {
+			console.error("UsersController._getUser error: ", error);
+			return _processError(error, req, res);
+		}
+  }
+
 	return {
 		// Auth:
 		register: _register,
@@ -244,6 +326,10 @@ function UsersController() {
 		validate: _validate,
 		refresh: _refresh,
 		logout: _logout,
+		verifyUser: _verifyUser,
+		updateUser: _updateUser,
+		getUsers: _getUsers,
+		getUser: _getUser,
 
 		// Protected:
 		getFullName:_getFullName

@@ -1,6 +1,6 @@
 const accessToken = {
 	secret: process.env.JWT_ACCESS_SECRET,
-	expiresIn: 10*60*1000 // 10 mins
+	expiresIn: 24*60*60*1000 // 1 day
 }
 const refreshToken = {
 	secret: process.env.JWT_REFRESH_SECRET,

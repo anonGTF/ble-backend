@@ -9,34 +9,41 @@ const bcryptSevice = require('#services/bcrypt.service');
 const User = database.define(
 	'User',
 	{
+		id: {
+			type: DataTypes.INTEGER,
+			unique: true,
+			primaryKey: true,
+			autoIncrement: true,
+			allowNull: false
+		},
 		email: {
-			type: DataTypes.STRING(255),
+			type: DataTypes.STRING,
 			unique: true,
 			allowNull: false
 		},
 		password: {
-			type: DataTypes.STRING(255),
+			type: DataTypes.STRING,
 			allowNull: false
 		},
-
-		firstName: {
-			type: DataTypes.STRING(80),
+		name: {
+			type: DataTypes.STRING,
 			allowNull: true
 		},
-		lastName: {
-			type: DataTypes.STRING(175),
+		nip: {
+			type: DataTypes.INTEGER,
 			allowNull: true
 		},
-
-		// Example of virtual field:
-		fullName: {
-			type: DataTypes.VIRTUAL,
-			get: function() {
-				const firstName = this.getDataValue("firstName");
-				const lastName = this.getDataValue("lastName");
-				return `${(firstName || "" ).trim()} ${(lastName || "").trim()}`.trim();
-			}
-		}
+		role: {
+			type: DataTypes.STRING,
+			allowNull: false,
+			validate: {
+        isIn: [['ADMIN', 'USER']]
+      }
+		},
+		is_verified: {
+			type: DataTypes.BOOLEAN,
+			allowNull: false
+		},
 	},
 	{
 		// Enable automatic 'createdAt' and 'updatedAt' fields.
@@ -59,6 +66,10 @@ User.associate = (models) => {
 	models.User.hasMany(models.DisabledRefreshToken, {
 		foreignKey: "UserId",
 		as: 'disabledRefreshTokens'
+	});
+	models.User.hasMany(models.Log, {
+		foreignKey: "user_id",
+		as: 'logs'
 	});
 }
 
