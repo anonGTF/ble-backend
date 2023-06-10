@@ -30,8 +30,11 @@ const BleDevice = database.define(
     minor: {
       type: DataTypes.INTEGER
     },
-    state: {
-      type: DataTypes.BOOLEAN
+    rack_no: {
+      type: DataTypes.INTEGER
+    },
+    password: {
+      type: DataTypes.STRING
     }
 	},
 	{

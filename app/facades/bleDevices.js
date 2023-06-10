@@ -23,7 +23,7 @@ async function _getDevices() {
 	}
 }
 
-async function _addDevice({ name, uuid, mac, major, minor, state }) {
+async function _addDevice({ name, uuid, mac, major, minor, rackNo, password }) {
   try{
 		const device = await BleDevice.create({
       name, 
@@ -31,7 +31,8 @@ async function _addDevice({ name, uuid, mac, major, minor, state }) {
       mac, 
       major, 
       minor, 
-      state
+      rack_no:rackNo,
+      password
     })
 		return Promise.resolve([ device ]);
 	}
@@ -57,7 +58,7 @@ async function _removeDevice({ id }) {
 	}
 }
 
-async function _updateDevice({ id, name, uuid, mac, major, minor, state }) {
+async function _updateDevice({ id, name, uuid, mac, major, minor, rackNo, password }) {
   try{
 		const updatedRow = await BleDevice.update({
       name, 
@@ -65,7 +66,8 @@ async function _updateDevice({ id, name, uuid, mac, major, minor, state }) {
       mac, 
       major, 
       minor, 
-      state
+      rack_no: rackNo, 
+      password
     }, {
       where: {
         id

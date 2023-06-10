@@ -80,6 +80,8 @@ function BleDevicesController() {
       const mac = req.body?.mac
       const major = req.body?.major
       const minor = req.body?.minor
+			const rackNo = req.body?.rackNo
+			const password = req.body?.password
 
 			const [ device ] = await bleDevicesFacade.addDevice({
         name, 
@@ -87,7 +89,8 @@ function BleDevicesController() {
         mac, 
         major, 
         minor, 
-        state: true
+        rackNo,
+				password
       });
 
       const log = await logsFacade.addLog({
@@ -119,7 +122,8 @@ function BleDevicesController() {
       const mac = req.body?.mac
       const major = req.body?.major
       const minor = req.body?.minor
-      const state = req.body?.state
+      const rackNo = req.body?.rackNo
+			const password = req.body?.password
 
 			const [ device ] = await bleDevicesFacade.updateDevice({
         id,
@@ -128,7 +132,8 @@ function BleDevicesController() {
         mac, 
         major, 
         minor, 
-        state
+        rackNo,
+				password
       });
 
 			return createOKResponse({
