@@ -60,7 +60,15 @@ async function _removeDevice({ id }) {
 
 async function _updateDevice({ id, name, uuid, mac, major, minor, rackNo, password }) {
   try{
-		const updatedRow = await BleDevice.update({
+    const device = await BleDevice.findById(id)
+
+    if (!device) {
+      const err = new Err('Device not found');
+      err.name = "DeviceNotFound";
+      throw err;
+    }
+
+		const updatedDevice = await device.update({
       name, 
       uuid, 
       mac, 
@@ -68,13 +76,8 @@ async function _updateDevice({ id, name, uuid, mac, major, minor, rackNo, passwo
       minor, 
       rack_no: rackNo, 
       password
-    }, {
-      where: {
-        id
-      }
     })
-    const message = (updatedRow > 0) ? "Berhasil update BLE" : "BLE tidak ditemukan"
-		return Promise.resolve([ message ]);
+		return Promise.resolve([ updatedDevice ]);
 	}
 	catch(error){
 		return Promise.reject(error);

@@ -7,14 +7,27 @@ const { Err } = require('#factories/errors');
 
 
 // Make first database connection.
+// const connection = new Sequelize(
+// 	Configs.database,
+// 	Configs.username,
+// 	Configs.password,
+// 	{
+// 		host:Configs.host,
+// 		port:Configs.port,
+// 		dialect:Configs.dialect,
+// 		pool:Configs.pool,
+// 		charset:Configs.charset,
+// 		collate:Configs.collate, 
+// 		timestamps:Configs.timestamps,
+// 		logging:Configs.logging
+// 	}
+// );
+
 const connection = new Sequelize(
-	Configs.database,
-	Configs.username,
-	Configs.password,
+	Configs.uri,
 	{
-		host:Configs.host,
-		port:Configs.port,
 		dialect:Configs.dialect,
+		dialectOptions:Configs.dialectOptions,
 		pool:Configs.pool,
 		charset:Configs.charset,
 		collate:Configs.collate, 

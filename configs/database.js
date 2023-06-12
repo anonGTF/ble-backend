@@ -1,3 +1,4 @@
+const fs = require('fs');
 const CHARSET = 'utf8';
 const COLLATE = 'utf8_general_ci';
 
@@ -8,6 +9,13 @@ module.exports = {
 	host: process.env.DB_HOST || 'localhost',
 	port: process.env.DB_PORT || '3306',
 	dialect: process.env.DB_DIALECT || 'mysql' || 'postgres',
+	uri: process.env.DB_URI,
+	dialectOptions: {
+    ssl: {
+      require: true,
+      ca: fs.readFileSync('ca.pem'),
+    },
+  },
 
 	pool: {
 		max: 5,
