@@ -75,6 +75,14 @@ async function _login({ email, password }) {
 			throw err;
 		}
 
+		if (!user.is_verified) {
+			// Validation failed,
+			// throw custom error with name Unauthorized:
+			const err = new Err(`User not verified.`);
+			err.name = "VerificationError";
+			throw err;
+		}
+
 		// Issue new access and refresh JWT.
 		const [ tokens ] = await JWT.issueTokens({ user });
 

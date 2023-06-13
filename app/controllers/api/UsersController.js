@@ -31,6 +31,10 @@ function UsersController() {
 				errorMessage = "Invalid email OR password input";
 				statusCode = 401;
 				break;
+			case('VerificationError'):
+				errorMessage = "User not verified!";
+				statusCode = 401;
+				break;
 			case('InvalidToken'):
 				errorMessage = 'Invalid token or token expired';
 				statusCode = 401;
