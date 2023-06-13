@@ -21,7 +21,8 @@ module.exports = {
 	verifyUser: _verifyUser,
 	updateUser: _updateUser,
 	getUsers: _getUsers,
-	getUser: _getUser
+	getUser: _getUser,
+	removeUser: _removeUser
 	// Private\
 }
 
@@ -176,11 +177,7 @@ async function _updateUser({ userId, name, role, nip }) {
 
 async function _getUsers() {
   try{
-		const users = await User.findAll({
-			where: {
-				is_verified: false
-			}
-		})
+		const users = await User.findAll()
 		return Promise.resolve([ users ]);
 	}
 	catch(error){
@@ -200,6 +197,26 @@ async function _getUser({ userId }) {
 		}
 
 		return Promise.resolve([ user ]);
+	}
+	catch(error){
+		return Promise.reject(error);
+	}
+}
+
+async function _removeUser({ userId }) {
+  try{
+		const user = await User.findById(userId);
+
+		if (!user) {
+			// If no such user was found, throw error with name UserNotFound:
+			const err = new Err('User not found');
+			err.name = "UserNotFound";
+			throw err;
+		}
+
+		const deletedUser = await user.destroy()
+
+		return Promise.resolve([ deletedUser ]);
 	}
 	catch(error){
 		return Promise.reject(error);

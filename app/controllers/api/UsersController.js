@@ -260,6 +260,27 @@ function UsersController() {
 		}
 	}
 
+	const _removeUser = async (req, res) => {
+		try {
+			// Unwrap user's id.
+			const userId = req.body?.id;
+
+			// Try to get full name.
+			const [ user ] = await usersFacade.removeUser({ userId });
+
+			return createOKResponse({
+				res, 
+				content:{
+					user
+				}
+			});
+		}
+		catch(error) {
+			console.error("UsersController._removeUser error: ", error);
+			return _processError(error, req, res);
+		}
+	}
+
 	const _updateUser = async (req, res) => {
 		try {
 			// Unwrap user's id.
@@ -330,6 +351,7 @@ function UsersController() {
 		updateUser: _updateUser,
 		getUsers: _getUsers,
 		getUser: _getUser,
+		removeUser: _removeUser,
 
 		// Protected:
 		getFullName:_getFullName
